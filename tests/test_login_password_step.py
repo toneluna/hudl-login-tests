@@ -1,6 +1,8 @@
 import pytest
 from playwright.sync_api import expect
 
+from config.test_data import UNKNOWN_EMAIL
+
 
 @pytest.mark.negative
 def test_wrong_password_shows_generic_error(password_step):
@@ -26,7 +28,7 @@ def test_password_toggle_reveals_and_hides_password(password_step):
 def test_forgot_password_link_goes_to_reset_page(password_step):
     password_step.forgot_password_link.click()
     expect(password_step.page.get_by_role("heading", name="Reset Password")).to_be_visible()
-    expect(password_step.email_input).to_have_value("no.such.user.12345@example.com")
+    expect(password_step.email_input).to_have_value(UNKNOWN_EMAIL)
 
 
 @pytest.mark.negative

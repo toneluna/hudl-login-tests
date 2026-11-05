@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from config.settings import Credentials, get_credentials
+from config.test_data import UNKNOWN_EMAIL
 from pages.home_page import HomePage
 from pages.login_page import LoginPage
 
@@ -16,7 +17,7 @@ def login_page(page: Page) -> LoginPage:
 @pytest.fixture
 def password_step(login_page: LoginPage) -> LoginPage:
     """Login page advanced to the password step using a non-existent account."""
-    login_page.submit_email("no.such.user.12345@example.com")
+    login_page.submit_email(UNKNOWN_EMAIL)
     expect(login_page.password_input).to_be_visible()
     return login_page
 

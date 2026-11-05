@@ -92,7 +92,7 @@ environment, with credentials stored as GitHub repository secrets.
 
 ```
 .github/workflows/  CI pipeline (lint, then tests)
-config/             Loads test credentials from .env
+config/             Credentials from .env (settings.py) and shared test data (test_data.py)
 pages/              Page objects: login_page.py (login flow), home_page.py (logged-in home)
 tests/              Test files grouped by area of the flow
 conftest.py         Shared fixtures
@@ -120,6 +120,10 @@ pyproject.toml      Ruff configuration
 - **Fixtures:** `login_page` opens the page, `password_step` advances to the
   second step, `credentials` loads the test account from `.env`, and `home_page`
   logs in and returns the home page, so every test starts from a known state.
+- **Test data in one place:** shared values such as the made-up email used for
+  negative tests live in `config/test_data.py`, separate from the secrets in
+  `config/settings.py`. The address uses the reserved `example.com` domain, so
+  it can never belong to a real account.
 - **Markers:** tests are tagged `smoke`, `negative`, `ui`, and `auth` so subsets
   can run. `--strict-markers` makes a mistyped marker an error instead of
   silently dropping the test from a run.

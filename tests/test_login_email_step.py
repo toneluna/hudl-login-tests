@@ -3,7 +3,7 @@ import re
 import pytest
 from playwright.sync_api import expect
 
-UNKNOWN_EMAIL = "no.such.user.12345@example.com"
+from config.test_data import UNKNOWN_EMAIL
 
 
 @pytest.mark.negative
