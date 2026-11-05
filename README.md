@@ -6,7 +6,7 @@ Playwright and Python using pytest and the Page Object Model.
 
 ## Prerequisites
 
-- Python 3 (developed with Python 3.14)
+- Python 3.10 or newer (developed and tested in CI with Python 3.14)
 - Git
 - A Hudl test account (credentials are supplied separately and never committed)
 
@@ -19,7 +19,7 @@ Playwright and Python using pytest and the Page Object Model.
    cd hudl-login-tests
    ```
 
-2. Create and activate a virtual environment.g
+2. Create and activate a virtual environment:
 
    Windows (PowerShell):
    ```
@@ -91,14 +91,14 @@ environment, with credentials stored as GitHub repository secrets.
 ## Project structure
 
 ```
-config/       Loads test credentials from .env
-pages/        Page objects: login_page.py (login flow), home_page.py (logged-in home)
-tests/        Test files grouped by area of the flow
-conftest.py   Shared fixtures
-pytest.ini    Pytest configuration and markers
-pyproject.toml Ruff configuration
-.env.example  Names of the required environment variables (no values)
 .github/workflows/  CI pipeline (lint, then tests)
+config/             Loads test credentials from .env
+pages/              Page objects: login_page.py (login flow), home_page.py (logged-in home)
+tests/              Test files grouped by area of the flow
+conftest.py         Shared fixtures
+pytest.ini          Pytest configuration and markers
+pyproject.toml      Ruff configuration
+.env.example        Names of the required environment variables (no values)
 ```
 
 ## Design decisions
@@ -109,12 +109,17 @@ pyproject.toml Ruff configuration
   UI change means updating one page object, not every test.
 - **Accessible locators:** elements are found by label and role instead of
   CSS or XPath, which keeps tests readable and resilient to markup changes.
-  The one exception is the account menu on the home page, which has no accessible role or name, so it is located by its CSS class (.hui-globaluseritem).
-  Credentialed tests skip cleanly: if HUDL_USERNAME/HUDL_PASSWORD are not set, tests marked auth are skipped with a message instead of failing. The password is excluded from the Credentials object’s string form so it never appears in logs or test output.
+  The one exception is the account menu on the home page, which has no
+  accessible role or name, so it is located by its CSS class (`.hui-globaluseritem`).
+- **Credentialed tests skip cleanly:** if `HUDL_USERNAME`/`HUDL_PASSWORD` are not
+  set, tests marked `auth` are skipped with a message instead of failing. The
+  password is excluded from the `Credentials` object's string form so it never
+  appears in logs or test output.
 - **No hard waits:** Playwright's auto-waiting and web-first assertions
   handle timing.
-- **Fixtures:** `login_page` opens the page and `password_step` advances to the
-  second step, so tests start from a known state.
+- **Fixtures:** `login_page` opens the page, `password_step` advances to the
+  second step, `credentials` loads the test account from `.env`, and `home_page`
+  logs in and returns the home page, so every test starts from a known state.
 - **Markers:** tests are tagged `smoke`, `negative`, and `ui` so subsets can run.
 - **Secrets:** credentials are read from environment variables, never from code.
 
@@ -132,10 +137,8 @@ Findings from exploring the page, which the tests document:
 - The Edit link returns to the email step with the email field cleared.
 - The password field is masked and has a show/hide control.
 - The Forgot Password page pre-fills the email entered on the previous step.
-- The show/hide password control changes its label to match its state, so the
-  locator matches either "Show password" or "Hide password".
-  (Noted as an observation only.)
-  - After logging in, the user lands on `hudl.com/home`.
+- The show/hide password control's label changes with its state ("Show password" or "Hide password").
+- After logging in, the user lands on `hudl.com/home`.
 - The account menu (top right) opens on hover, not click; Log Out is inside it.
 - Logging out returns the user to the public site, `www.hudl.com`.
 - After logging out, visiting `/home` redirects back to the login page.
@@ -148,11 +151,15 @@ Findings from exploring the page, which the tests document:
 - **No lockout or brute-force testing:** the tests run against a live
   production site and use a made-up address for negative cases, to avoid
   locking real accounts and to keep request volume low.
-- **Bot protection:** [note here if you ever encounter CAPTCHA or rate limiting].
+- **Bot protection:** no CAPTCHA or rate limiting was encountered during
+  development. If Hudl adds bot protection, the `auth` tests are the most
+  likely to be affected.
 - **Known warning:** pytest may print a deprecation warning about a `base_url`
   fixture. It comes from a plugin interacting with a newer pytest, not from
   this project's code.
-- **Credentialed tests:** successful login, logout, and “home requires login after logout” run against the supplied test account. They need .env to be filled in.
+- **Credentialed tests:** successful login, logout, and "home requires login
+  after logout" run against the supplied test account. They need `.env` to be
+  filled in.
 
 ## Possible next steps
 
