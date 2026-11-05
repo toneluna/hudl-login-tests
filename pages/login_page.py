@@ -23,6 +23,9 @@ class LoginPage:
         self.password_input = page.get_by_label(re.compile(r"^Password"))
         self.forgot_password_link = page.get_by_role("link", name="Forgot Password?")
         self.edit_email_link = page.get_by_role("link", name="Edit")
+        self.password_toggle = page.get_by_role(
+            "button", name=re.compile(r"(show|hide).*password", re.I)
+        )
 
     def open(self) -> None:
         self.page.goto(self.PATH)
@@ -35,3 +38,12 @@ class LoginPage:
 
     def error_message(self, text: str) -> Locator:
         return self.page.get_by_text(text, exact=True)
+
+    def submit_password(self, password: str) -> None:
+        self.password_input.fill(password)
+        self.continue_button.click()
+
+    def login(self, username: str, password: str) -> None:
+        self.submit_email(username)
+        expect(self.password_input).to_be_visible()
+        self.submit_password(password)
