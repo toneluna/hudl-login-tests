@@ -1,4 +1,5 @@
 # Hudl Login Test Automation
+[![Tests](https://github.com/toneluna/hudl-login-tests/actions/workflows/tests.yml/badge.svg)](https://github.com/toneluna/hudl-login-tests/actions/workflows/tests.yml)
 
 Automated UI tests for the Hudl login flow (https://www.hudl.com/login), built with
 Playwright and Python using pytest and the Page Object Model.
@@ -73,6 +74,20 @@ ruff check .
 ruff format .
 ```
 
+## Continuous integration
+
+GitHub Actions runs on every push to `main` and on every pull request
+(see `.github/workflows/tests.yml`):
+
+1. **Lint:** `ruff check` and `ruff format --check`. Tests do not run if this fails.
+2. **Test:** installs Chromium and runs `pytest -m "not auth"`. If a test fails,
+   screenshots and traces are uploaded as a downloadable artifact.
+
+Tests marked `auth` are not run in CI. They log in to the live Hudl site with a
+real account, and running them on every push could trigger bot protection or
+lock the account. In a team setting they would run against a staging
+environment, with credentials stored as GitHub repository secrets.
+
 ## Project structure
 
 ```
@@ -83,6 +98,7 @@ conftest.py   Shared fixtures
 pytest.ini    Pytest configuration and markers
 pyproject.toml Ruff configuration
 .env.example  Names of the required environment variables (no values)
+.github/workflows/  CI pipeline (lint, then tests)
 ```
 
 ## Design decisions
@@ -140,6 +156,5 @@ Findings from exploring the page, which the tests document:
 
 ## Possible next steps
 
-- Run the suite in CI (GitHub Actions) on every push.
 - Add cross-browser runs (Firefox and WebKit).
 - Add accessibility checks.
