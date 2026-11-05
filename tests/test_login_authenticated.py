@@ -3,13 +3,16 @@ import re
 import pytest
 from playwright.sync_api import expect
 
+from pages.home_page import HomePage
+
 PUBLIC_SITE = re.compile(r"^https://www\.hudl\.com/?(\?.*)?$")
 
 
 @pytest.mark.auth
 @pytest.mark.smoke
-def test_successful_login_lands_on_home(home_page, credentials):
-    home_page.expect_loaded(credentials.username)
+def test_successful_login_lands_on_home(login_page, credentials):
+    login_page.login(credentials.username, credentials.password)
+    HomePage(login_page.page).expect_loaded(credentials.username)
 
 
 @pytest.mark.auth
