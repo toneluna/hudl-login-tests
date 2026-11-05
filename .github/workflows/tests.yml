@@ -22,11 +22,15 @@ jobs:
   test:
     needs: lint
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.14"]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.14"
+          python-version: ${{ matrix.python-version }}
           cache: pip
       - run: pip install -r requirements.txt
       - run: playwright install --with-deps chromium
@@ -34,6 +38,6 @@ jobs:
       - uses: actions/upload-artifact@v7
         if: failure()
         with:
-          name: test-results
+          name: test-results-py${{ matrix.python-version }}
           path: test-results/
           retention-days: 7

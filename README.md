@@ -6,7 +6,7 @@ Playwright and Python using pytest and the Page Object Model.
 
 ## Prerequisites
 
-- Python 3.10 or newer (developed and tested in CI with Python 3.14)
+- Python 3.10 or newer (the minimum required by Playwright and pytest; CI tests both 3.10 and 3.14)
 - Git
 - A Hudl test account (credentials are supplied separately and never committed)
 
@@ -80,8 +80,9 @@ GitHub Actions runs on every push to `main` and on every pull request
 (see `.github/workflows/tests.yml`):
 
 1. **Lint:** `ruff check` and `ruff format --check`. Tests do not run if this fails.
-2. **Test:** installs Chromium and runs `pytest -m "not auth"`. If a test fails,
-   screenshots and traces are uploaded as a downloadable artifact.
+2. **Test:** on Python 3.10 (the minimum supported) and 3.14 (the version used
+   in development), installs Chromium and runs `pytest -m "not auth"`. If a test
+   fails, screenshots and traces are uploaded as a downloadable artifact.
 
 Tests marked `auth` are not run in CI. They log in to the live Hudl site with a
 real account, and running them on every push could trigger bot protection or
