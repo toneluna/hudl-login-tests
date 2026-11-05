@@ -29,12 +29,19 @@ def test_unknown_email_advances_to_password_step(login_page):
     expect(login_page.edit_email_link).to_be_visible()
 
 
-def test_edit_link_returns_to_email_step(login_page):
+def test_edit_link_returns_to_empty_email_step(login_page):
     login_page.submit_email(UNKNOWN_EMAIL)
     login_page.edit_email_link.click()
     expect(login_page.email_input).to_be_editable()
+    expect(login_page.email_input).to_have_value("")
 
 
 def test_create_account_link_goes_to_signup(login_page):
     login_page.create_account_link.click()
     expect(login_page.page).to_have_url(re.compile(r"/u/signup"))
+
+
+def test_enter_key_submits_email(login_page):
+    login_page.email_input.fill(UNKNOWN_EMAIL)
+    login_page.email_input.press("Enter")
+    expect(login_page.password_input).to_be_visible()

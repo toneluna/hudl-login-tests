@@ -27,3 +27,9 @@ def test_forgot_password_link_goes_to_reset_page(password_step):
     password_step.forgot_password_link.click()
     expect(password_step.page.get_by_role("heading", name="Reset Password")).to_be_visible()
     expect(password_step.email_input).to_have_value("no.such.user.12345@example.com")
+
+
+@pytest.mark.negative
+def test_blank_password_shows_required_message(password_step):
+    password_step.submit_password("")
+    expect(password_step.error_message("Please enter your password")).to_be_visible()
