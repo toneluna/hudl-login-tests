@@ -96,8 +96,7 @@ config/             Credentials from .env (settings.py) and shared test data (te
 pages/              Page objects: login_page.py (login flow), home_page.py (logged-in home)
 tests/              Test files grouped by area of the flow
 conftest.py         Shared fixtures
-pytest.ini          Pytest configuration and markers
-pyproject.toml      Ruff configuration
+pyproject.toml      Pytest and Ruff configuration (markers, options, lint rules)
 .env.example        Names of the required environment variables (no values)
 ```
 

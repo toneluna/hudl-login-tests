@@ -1,3 +1,14 @@
+[tool.pytest.ini_options]
+base_url = "https://www.hudl.com"
+addopts = "--strict-markers --tracing retain-on-failure --screenshot only-on-failure"
+markers = [
+    "smoke: critical-path checks",
+    "negative: invalid input and error handling",
+    "ui: element and layout checks",
+    "auth: tests that log in with a real account (need credentials in .env)",
+]
+testpaths = ["tests"]
+
 [tool.ruff]
 line-length = 100
 
