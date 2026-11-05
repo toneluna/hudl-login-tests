@@ -120,7 +120,9 @@ pyproject.toml      Ruff configuration
 - **Fixtures:** `login_page` opens the page, `password_step` advances to the
   second step, `credentials` loads the test account from `.env`, and `home_page`
   logs in and returns the home page, so every test starts from a known state.
-- **Markers:** tests are tagged `smoke`, `negative`, and `ui` so subsets can run.
+- **Markers:** tests are tagged `smoke`, `negative`, `ui`, and `auth` so subsets
+  can run. `--strict-markers` makes a mistyped marker an error instead of
+  silently dropping the test from a run.
 - **Secrets:** credentials are read from environment variables, never from code.
 
 ## Observed behavior of the login flow
